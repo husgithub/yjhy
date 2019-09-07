@@ -1,0 +1,10 @@
+#compAdd{
+
+}
+#compAdd .layui-form-label{
+    width: 120px;
+}
+#compAdd .layui-input-block {
+    margin-left: 10px;
+    min-height: 36px;
+}

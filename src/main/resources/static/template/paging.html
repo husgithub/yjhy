@@ -1,0 +1,21 @@
+<div class="layui-box layui-laypage layui-laypage-default">
+    <span class="layui-laypage-count">共 {{option.total}} 条</span>
+    <a href="javascript:;" class="layui-laypage-prev" ng-class="{true:'layui-disabled',false:''}[option.curr<=1]" ng-click="goTo(option.curr-1)">上一页</a>
+    <!--<a href="javascript:;"  class="layui-laypage-curr">
+        <em class="layui-laypage-em"></em><em>1</em>
+    </a>-->
+    <a href="javascript:;" ng-repeat="index in option.pageList" ng-class="{true:'layui-laypage-curr',false:''}[option.curr == index]" ng-click="goTo(index)">
+        <em ng-bind="index" ng-if="option.curr != index"></em>
+        <em class="layui-laypage-em" ng-if="option.curr == index"></em><em ng-bind="index" ng-if="option.curr == index"></em>
+    </a>
+    <!--<span class="layui-laypage-spr">…</span>-->
+    <!--<a href="javascript:;" class="layui-laypage-last" title="尾页" data-page="10">10</a>-->
+    <a href="javascript:;" class="layui-laypage-next" ng-class="{true:'layui-disabled',false:''}[option.curr >= option.totalPage]" ng-click="goTo(option.curr+1)">下一页</a>
+    <span class="layui-laypage-limits">
+        <select lay-ignore="" ng-model="option.limit" ng-change="goTo(1,option.limit)">
+            <option value="{{index}}" ng-repeat="index in option.pageSelect">{{index}} 条/页</option>
+        </select>
+    </span>
+    <a href="javascript:;" data-page="1" class="layui-laypage-refresh"><i class="layui-icon layui-icon-refresh"></i></a>
+    <span class="layui-laypage-skip">到第<input type="text" min="1" value="1" class="layui-input">页<button type="button" class="layui-laypage-btn">确定</button></span>
+</div>

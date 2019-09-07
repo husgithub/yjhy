@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>layout</title>
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/company/add.css"/>
+</head>
+<body>
+
+<div class="layui-layout" id="compAdd">
+    <form action="" method="post" class="layui-form" id="compAddForm">
+        <table class="layui-table" id="table1">
+            <thead>
+            <tr>
+                <td colspan="6" align="center"><h2>公司基本信息</h2><input type="hidden" name="id" th:value="${c?.id}"/></td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><label class="layui-form-label">公司名称</label></td>
+                <td colspan="5">
+                    <input type="text" name="cName" lay-verify="cName" autocomplete="off" placeholder="请输入公司名称" class="layui-input" th:value="${c?.cName}"/>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">地址</label></td>
+                <td colspan="2">
+                    <input type="text" name="cAddress" lay-verify="title" autocomplete="off" placeholder="请输入公司地址" class="layui-input" th:value="${c?.cAddress}"/>
+                </td>
+                <td><label class="layui-form-label">公司联系人</label></td>
+                <td colspan="2">
+                    <input type="text" name="cContacts" lay-verify="title" autocomplete="off" placeholder="请输入联系人" class="layui-input" th:value="${c?.cContacts}"/>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">注册资本（万）</label></td>
+                <td>
+                    <input type="text" name="cCapital" lay-verify="cCapital" autocomplete="off" placeholder="" class="layui-input" th:value="${c?.cCapital}"/>
+                </td>
+                <td><label class="layui-form-label">公司类型</label></td>
+                <td>
+                    <input type="text" name="cType" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${c?.cType}"/>
+                </td>
+                <td><label class="layui-form-label">公司规模</label></td>
+                <td>
+                    <div class="layui-input-block">
+                        <input type="radio" name="cSize" value="yiban" title="一般规模" checked="checked" th:checked="${isEdit==null?false:c?.cSize == 'yiban'}"/>
+                        <input type="radio" name="cSize" value="xiao" title="小规模" th:checked="${isEdit==null?true:c?.cSize == 'xiao'}"/>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">客户来源</label></td>
+                <td><input type="text" name="cCusource" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${c?.cCusource}"/></td>
+                <td><label class="layui-form-label">推荐人</label></td>
+                <td><input type="text" name="cReferrer" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${c?.cReferrer}"/></td>
+                <td><label class="layui-form-label">邮箱</label></td>
+                <td><input type="text" name="cEmail" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${c?.cEmail}"/></td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">经营范围</label></td>
+                <td colspan="5">
+                    <textarea placeholder="请输入内容" class="layui-textarea" rows="5" name="cScope" th:text="${c?.cScope}"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="padding: 0px;border: none;width: 100%;">
+                    <table class="layui-table" id="zitable" style="margin: 0px;border: none;">
+                        <thead>
+                        <tr class="">
+                            <th style="text-align: center">法人/股东</th>
+                            <th style="text-align: center">姓名</th>
+                            <th style="text-align: center">身份证号码</th>
+                            <th style="text-align: center">股权分配（%）</th>
+                            <th style="text-align: center">职务</th>
+                            <th style="text-align: center">
+                                <button type="button" class="layui-btn layui-btn-warm layui-btn-sm"  onclick="legalPersonAdd();">
+                                    <i class="layui-icon">&#xe654;</i>新增
+                                </button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="lp-tbody">
+                        <tr th:if="${isEdit == null}">
+                            <td align="center">
+                                <input type="hidden" value="0" name="index"/>
+                                <div class="layui-input-block">
+                                    <select name="legalPersons[0].lType">
+                                        <option value="faren">法人</option>
+                                        <option value="gudong">股东</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td align="center">
+                                <input type="text" name="legalPersons[0].lName" lay-verify="lName" autocomplete="off"
+                                       placeholder="请输入姓名" class="layui-input"/>
+                            </td>
+                            <td align="center">
+                                <input type="text" name="legalPersons[0].lIdcard" lay-verify="title" autocomplete="off"
+                                       placeholder="请输入身份证号" class="layui-input"/>
+                            </td>
+                            <td align="center">
+                                <input type="text" name="legalPersons[0].lAllocation" lay-verify="lAllocation"
+                                       autocomplete="off" placeholder="请输入股权分配" class="layui-input"/>
+                            </td>
+                            <td align="center">
+                                <input type="text" name="legalPersons[0].lJob" lay-verify="title" autocomplete="off"
+                                       placeholder="请输入职务" class="layui-input"/>
+                            </td>
+                            <td align="center">
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="removeLP(this)"><i class="layui-icon"></i></button>
+                            </td>
+                        </tr>
+                        <tr th:each="l,i : ${c?.legalPersons}">
+                            <td align="center">
+                                <input type="hidden" th:value="${i.index}" name="index"/>
+                                <div class="layui-input-block">
+                                    <select th:name="@{'legalPersons['+${i.index}+'].lType'}">
+                                        <option value="faren" th:selected="${l?.lType=='faren'}">法人</option>
+                                        <option value="gudong" th:selected="${l?.lType=='gudong'}">股东</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td align="center">
+                                <input type="text" th:name="@{'legalPersons['+${i.index}+'].lName'}" lay-verify="lName" autocomplete="off"
+                                       placeholder="请输入姓名" class="layui-input" th:value="${l.lName}"/>
+                            </td>
+                            <td align="center">
+                                <input type="text" th:name="@{'legalPersons['+${i.index}+'].lIdcard'}" lay-verify="title" autocomplete="off"
+                                       placeholder="请输入身份证号" class="layui-input" th:value="${l.lIdcard}"/>
+                            </td>
+                            <td align="center">
+                                <input type="text" th:name="@{'legalPersons['+${i.index}+'].lAllocation'}" lay-verify="lAllocation"
+                                       autocomplete="off" placeholder="请输入股权分配" class="layui-input" th:value="${l.lAllocation}"/>
+                            </td>
+                            <td align="center">
+                                <input type="text" th:name="@{'legalPersons['+${i.index}+'].lJob'}" lay-verify="title" autocomplete="off"
+                                       placeholder="请输入职务" class="layui-input" th:value="${l.lJob}"/>
+                            </td>
+                            <td align="center">
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="removeLP(this)"><i class="layui-icon"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">经办人</label></td>
+                <td colspan="2"><input type="text" name="cOperator" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${c?.cOperator}"/></td>
+                <td ><label class="layui-form-label">联系方式</label></td>
+                <td colspan="2"><input type="text" name="cOperatorphone" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${c?.cOperatorphone}"/></td>
+            </tr>
+            <tr>
+                <td rowspan="2"><label class="layui-form-label">营业执照</label></td>
+                <td><label class="layui-form-label">注册日期</label></td>
+                <td colspan="2"><input type="text" class="layui-input" id="cRegtime" name="cRegtime" placeholder="yyyy-MM-dd HH:mm:ss" lay-verify="time" th:value="${c?.cRegtime==null?'':#dates.format(c?.cRegtime,'yyyy-MM-dd HH:mm:ss')}"/></td>
+                <td><label class="layui-form-label">统一信用代码</label></td>
+                <td>
+                    <input type="text" name="cRegcode" class="layui-input" th:value="${c?.cRegcode}"/>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">营业期限</label></td>
+                <td  colspan="4">
+                    <input type="text" class="layui-input" id="bnStart" name="bnStart" placeholder="yyyy-MM-dd HH:mm:ss" lay-verify="time" style="width: 240px;display: inline-block" th:value="${c?.bnStart==null?'':#dates.format(c?.bnStart,'yyyy-MM-dd HH:mm:ss')}"/> -
+                    <input type="text" class="layui-input" id="bnEnd" name="bnEnd" placeholder="yyyy-MM-dd HH:mm:ss" lay-verify="time"  style="width: 240px;display: inline-block" th:value="${c?.bnEnd==null?'':#dates.format(c?.bnEnd,'yyyy-MM-dd HH:mm:ss')}"/>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="4"><label class="layui-form-label">地税</label><input type="hidden"  value="ds" name="taxations[0].tType" th:value="${(c==null ||c.taxations==null)?'': c?.taxations[0]?.tType}"/></td>
+                <td><label class="layui-form-label">地税专管员</label></td>
+                <td><label class="layui-form-label">姓名</label></td>
+                <td>
+                    <input type="text" name="taxations[0].tName" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${(c==null ||c.taxations==null)?'':c?.taxations[0]?.tName}"/>
+                </td>
+                <td><label class="layui-form-label">联系方式</label></td>
+                <td>
+                    <input type="text" name="taxations[0].tPhone" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${(c==null ||c.taxations==null)?'':c?.taxations[0]?.tPhone}"/>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">地税税源地址</label></td>
+                <td colspan="4"><input type="text" name="taxations[0].tAddress" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${(c==null ||c.taxations==null)?'':c?.taxations[0]?.tAddress}"/></td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">税种核定日期</label></td>
+                <td colspan="1"><input type="text" id="dsChecktime1" name="taxations[0].tChecktime" lay-verify="title" autocomplete="off" placeholder="yyyy-MM-dd HH:mm:ss" class="layui-input" th:value="${(c==null ||c.taxations==null||c?.taxations[0]?.tChecktime==null)?'':#dates.format(c?.taxations[0]?.tChecktime,'yyyy-MM-dd HH:mm:ss')}"/></td>
+                <td><label class="layui-form-label">税种</label></td>
+                <td colspan="2"><input type="text" name="taxations[0].tVariety" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${(c==null ||c.taxations==null)?'':c?.taxations[0]?.tVariety}"/></td>
+            </tr>
+            <tr>
+
+                <td><label class="layui-form-label">申报(月报/季报)</label></td>
+                <td colspan="1">
+                    <div class="layui-input-block">
+                        <input type="radio" name="taxations[0].tShenbao" value="yue" title="月报" checked="checked" th:checked="${isEdit==null?false:c?.taxations[0]?.tShenbao == 'yue'}"/>
+                        <input type="radio" name="taxations[0].tShenbao" value="ji" title="季报" th:checked="${isEdit==null?true:c?.taxations[0]?.tShenbao == 'ji'}"/>
+                    </div>
+                </td>
+                <td><label class="layui-form-label">会计电话</label></td>
+                <td colspan="2">
+                    <input type="text" name="taxations[0].tAccountantphone" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${(c==null ||c.taxations==null)?'':c?.taxations[0]?.tAccountantphone}"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td rowspan="4"><label class="layui-form-label">国税</label><input type="hidden"  value="gs" name="taxations[1].tType" th:value="${(c==null ||c.taxations==null)?'':c?.taxations[1]?.tType}"/></td>
+                <td><label class="layui-form-label">国税专管员</label></td>
+                <td><label class="layui-form-label">姓名</label></td>
+                <td><input type="text" name="taxations[1].tName" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${(c==null ||c.taxations==null)?'':c?.taxations[1]?.tName}"/></td>
+                <td><label class="layui-form-label">联系方式</label></td>
+                <td>
+                    <input type="text" name="taxations[1].tPhone" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${(c==null ||c.taxations==null)?'':c?.taxations[1]?.tPhone}"/>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">国税税源地址</label></td>
+                <td colspan="4">
+                    <input type="text" name="taxations[1].tAddress" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${(c==null ||c.taxations==null)?'':c?.taxations[1]?.tAddress}"/>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">税种核定日期</label></td>
+                <td colspan="1">
+                    <input type="text" id="gsChecktime1" name="taxations[1].tChecktime" lay-verify="title" autocomplete="off" placeholder="yyyy-MM-dd HH:mm:ss" class="layui-input" th:value="${(c==null||c.taxations==null||c?.taxations[1]?.tChecktime==null)?'':#dates.format(c?.taxations[1]?.tChecktime,'yyyy-MM-dd HH:mm:ss')}"/>
+                </td>
+                <td><label class="layui-form-label">税种</label></td>
+                <td colspan="2">
+                    <input type="text" name="taxations[1].tVariety" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${(c==null||c.taxations==null)?'':c?.taxations[1]?.tVariety}"/>
+                </td>
+            </tr>
+            <tr>
+
+                <td><label class="layui-form-label">申报(月报/季报)</label></td>
+                <td colspan="1">
+                    <div class="layui-input-block">
+                        <input type="radio" name="taxations[1].tShenbao" value="yue" title="月报" checked="checked" th:checked="${isEdit==null?true:c?.taxations[1]?.tShenbao == 'yue'}"/>
+                        <input type="radio" name="taxations[1].tShenbao" value="ji" title="季报" th:checked="${isEdit==null?false:c?.taxations[1]?.tShenbao == 'ji'}"/>
+                    </div>
+                </td>
+                <td><label class="layui-form-label">会计电话</label></td>
+                <td colspan="2">
+                    <input type="text" name="taxations[1].tAccountantphone" lay-verify="title" autocomplete="off" placeholder="" class="layui-input" th:value="${isEdit==null?'':c?.taxations[1]?.tAccountantphone}"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label class="layui-form-label">地税钥匙/国税钥匙/金税盘</label></td>
+                <td  colspan="5">
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="cTaxationtype" lay-skin="primary" title="地税钥匙" value="ds" th:checked="${c?.cTaxationtype==null?false:#strings.contains(c?.cTaxationtype,'ds')}"/>
+                        <input type="checkbox" name="cTaxationtype" lay-skin="primary" title="国税钥匙" value="gs" th:checked="${c?.cTaxationtype==null?false:#strings.contains(c?.cTaxationtype,'gs')}"/>
+                        <input type="checkbox" name="cTaxationtype" lay-skin="primary" title="金税盘" value="js" th:checked="${c?.cTaxationtype==null?false:#strings.contains(c?.cTaxationtype,'js')}"/>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">对公账号</label></td>
+                <td  colspan="5">
+                    <input type="text" name="cPublicaccount" class="layui-input" th:value="${isEdit==null?'':c?.cPublicaccount}"/>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">是否已建账</label></td>
+                <td>
+                    <div class="layui-input-block">
+                        <input type="radio" name="cIsjianz" value="1" title="是" checked="checked" th:checked="${isEdit==null?false:c?.cIsjianz == '1'}"/>
+                        <input type="radio" name="cIsjianz" value="0" title="否" th:checked="${isEdit==null?true:c?.cIsjianz == '0'}"/>
+                    </div>
+                </td>
+                <td><label class="layui-form-label">是否上报会计</label></td>
+                <td>
+                    <div class="layui-input-block">
+                        <input type="radio" name="cIsreported" value="1" title="是" checked="checked" th:checked="${isEdit==null?false:c?.cIsreported == '1'}"/>
+                        <input type="radio" name="cIsreported" value="0" title="否" th:checked="${isEdit==null?true:c?.cIsreported == '0'}"/>
+                    </div>
+                </td>
+                <td>
+                    <label class="layui-form-label">会计姓名</label>
+                </td>
+                <td>
+                    <input type="text" name="cAccountantname" class="layui-input" th:value="${isEdit==null?'':c?.cAccountantname}"/>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">变更</label></td>
+                <td  colspan="5" style="height: 200px;">
+                    <textarea style="height: 200px;" placeholder="说点什么..." class="layui-textarea" name="cUpdate" th:text="${isEdit==null?'':c?.cUpdate}"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="layui-form-label">备注</label></td>
+                <td  colspan="5" style="height: 200px;">
+                    <textarea style="height: 200px;" placeholder="说点什么..." class="layui-textarea" name="cNotes" th:text="${isEdit==null?'':c?.cNotes}"></textarea>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="layui-form-item ta-center">
+            <!--提交按钮必须加上lay-submit-->
+            <button th:if="${isEdit==null || isEdit == false}" type="button" class="layui-btn" lay-submit="" lay-filter="saveSubmit">保存并提交</button>
+            <button th:if="${isEdit == true}" type="button" class="layui-btn" lay-submit="" lay-filter="editSubmit">修改并提交</button>
+        </div>
+    </form>
+</div>
+
+<script src="/js/common/jquery-1.10.1.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="/js/common/common.js"></script>
+<script src="/js/common/dateformat.js"></script>
+<script src="/js/company/add.js"></script>
+</body>
+</html>

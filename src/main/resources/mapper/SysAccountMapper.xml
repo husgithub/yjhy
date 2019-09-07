@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yjhy.mapper.SysAccountMapper" >
+
+    <sql id="sql_list">
+        account_id, account_name, account_nickname, account_pwd, account_email, account_phone,
+        logincount, account_ip, errorcount, createtime, lastlogintime
+    </sql>
+
+    <select id="selectWithAnd" parameterType="com.yjhy.entity.SysAccount" resultType="com.yjhy.entity.SysAccount">
+        SELECT
+        <include refid="sql_list"></include>
+        FROM sys_account
+        <where>
+            <if test="accountName != null" >
+                AND account_name = #{accountName,jdbcType=VARCHAR}
+            </if>
+            <if test="accountNickname != null" >
+                AND account_nickname = #{accountNickname,jdbcType=VARCHAR}
+            </if>
+            <if test="accountPwd != null" >
+                AND account_pwd = #{accountPwd,jdbcType=VARCHAR}
+            </if>
+            <if test="accountEmail != null" >
+                AND account_email = #{accountEmail,jdbcType=VARCHAR}
+            </if>
+            <if test="accountPhone != null" >
+                AND account_phone = #{accountPhone,jdbcType=VARCHAR}
+            </if>
+            <if test="logincount != null" >
+                AND logincount = #{logincount,jdbcType=INTEGER}
+            </if>
+            <if test="accountIp != null" >
+                AND account_ip = #{accountIp,jdbcType=VARCHAR}
+            </if>
+            <if test="errorcount != null" >
+                AND errorcount = #{errorcount,jdbcType=INTEGER}
+            </if>
+            <if test="createtime != null" >
+                AND createtime = #{createtime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="lastlogintime != null" >
+                AND lastlogintime = #{lastlogintime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+
+</mapper>

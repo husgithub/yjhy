@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yjhy.mapper.TaxationMapper">
+
+    <sql id="sql_list" >
+        id, t_type, t_name, t_phone, t_address, t_checktime, t_accountantPhone, t_variety,
+        t_shenbao, t_companyid
+    </sql>
+
+    <select id="getTaxationByCompanyId" parameterType="java.lang.Integer" resultType="com.yjhy.entity.Taxation">
+        SELECT
+        <include refid="sql_list" />
+        FROM taxation
+        WHERE taxation.`t_companyid` = #{companyId}
+    </select>
+
+    <insert id="addTaxations" parameterType="java.util.List">
+        insert into taxation (t_type, t_name, t_phone, t_address, t_checktime, t_accountantPhone, t_variety, t_shenbao, t_companyid)
+        values
+        <foreach collection="taxationList" item="i" separator=",">
+            (#{i.tType}, #{i.tName},#{i.tPhone}, #{i.tAddress}, #{i.tChecktime}, #{i.tAccountantphone}, #{i.tVariety}, #{i.tShenbao}, #{i.tCompanyid})
+        </foreach>
+    </insert>
+
+</mapper>

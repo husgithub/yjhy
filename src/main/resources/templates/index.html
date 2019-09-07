@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <title>云玖合壹财务后台管理系统</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" href="layui/css/layui.css"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo pl-10">云玖合壹财务后台管理系统</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <!--<li class="layui-nav-item"><a href="">控制台</a></li>-->
+            <li class="layui-nav-item"><a href="javascript:PageUtil.menuGoTo('/company/list')" id="compMenu">公司管理</a>
+            </li>
+            <!--<li class="layui-nav-item">
+                <a href="javascript:;">其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">邮件管理</a></dd>
+                    <dd><a href="">消息管理</a></dd>
+                    <dd><a href="">授权管理</a></dd>
+                </dl>
+            </li>-->
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="/img/avatar/timg.jpg" class="layui-nav-img"/>
+                    <span th:text="${session.admin.accountName}"></span>
+                </a>
+                <dl class="layui-nav-child">
+                <dd><a href="/logout">退出</a></dd>
+            </dl>
+            </li>
+            <!--<li class="layui-nav-item"><a href="">退了</a></li>-->
+        </ul>
+    </div>
+
+    <div class="layui-body mybody">
+        <iframe id="mainContent" name="mainContent" src="" scrolling="auto" >
+        </iframe>
+    </div>
+
+    <div class="layui-footer myfooter">
+        <div class="ta-center">© 2018 - 云玖合壹</div>
+    </div>
+</div>
+<script src="/js/common/jquery-1.10.1.min.js"></script>
+<script th:src="@{/layui/layui.js}" src="/layui/layui.js"></script>
+<script src="/js/common/common.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+    window.onload = function () {
+        document.getElementById('compMenu').click();
+    }
+</script>
+<script th:inline="javascript" type="text/javascript">
+    // <![CDATA[
+    var xx=[[${session.admin}]]
+    console.log(xx);
+    // ]]>
+</script>
+</body>
+</html>

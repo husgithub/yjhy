@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yjhy.mapper.CompanyMapper">
+
+    <sql id="sql_list">
+        id, c_name, c_address, c_contacts, c_email, c_size, c_capital, c_type, c_scope, c_cuSource,
+        c_referrer, c_operator, c_operatorPhone, c_regtime, c_regcode, bn_start, bn_end,
+        c_taxationtype, c_publicAccount, c_isReported, c_accountantName, c_isjianz, c_createtime,
+        c_modification, c_status
+    </sql>
+    <sql id="sql_criteria">
+        <where>
+            <if test="company.id!=null and company.id!='' ">
+                AND id = #{company.id}
+            </if>
+            <if test="company.cName!=null and company.cName!='' ">
+                AND company.`c_name` LIKE '%${company.cName}%'
+            </if>
+            <if test="company.cAddress!=null and company.cAddress!='' ">
+                AND company.`c_address` LIKE '%${company.cAddress}%'
+            </if>
+            <if test="company.cContacts!=null and company.cContacts!='' ">
+                AND company.`c_contacts` LIKE '%${company.cContacts}%'
+            </if>
+            <if test="company.cRegcode!=null and company.cRegcode!='' ">
+                AND company.`c_regcode` LIKE '%${company.cRegcode}%'
+            </if>
+            <if test="company.cRegtimeStart!=null and company.cRegtimeStart!='' ">
+                <![CDATA[
+	                AND company.`c_regtime` >= #{company.cRegtimeStart}
+	                ]]>
+            </if>
+            <if test="company.cRegtimeEnd!=null and company.cRegtimeEnd!='' ">
+                <![CDATA[
+	                AND company.`c_regtime` < #{company.cRegtimeEnd}
+	                ]]>
+            </if>
+        </where>
+    </sql>
+    <sql id="sql_page">
+        <if test="pager.start !=null and pager.pageSize !=null and pager.pageSize>0">
+            limit ${pager.start},${pager.pageSize}
+        </if>
+    </sql>
+
+    <select id="getCompanyById" parameterType="java.lang.Integer" resultType="com.yjhy.entity.Company">
+        SELECT
+        <include refid="sql_list"></include>,
+        c_update,c_notes,
+        IFNULL((SELECT SUM(money) FROM earnings),0) totalMoney
+        FROM company
+        WHERE id = #{id}
+    </select>
+
+    <select id="listCompany" resultType="com.yjhy.entity.Company">
+        SELECT
+        <include refid="sql_list"></include>,
+        IFNULL((SELECT SUM(money) FROM earnings),0) totalMoney
+        FROM company
+        <include refid="sql_criteria"></include>
+        ORDER BY c_modification DESC
+        <include refid="sql_page"></include>
+    </select>
+
+    <select id="countCompany" resultType="java.lang.Integer">
+        SELECT count(1) FROM company
+        <include refid="sql_criteria"></include>
+    </select>
+
+    <insert id="addCompany" parameterType="com.yjhy.entity.Company">
+        <!-- 在进行插入操作之后获取主键,keyProperty与主键名保持一致    SELECT LAST_INSERT_ID() 只适用自增主键-->
+        <selectKey order="AFTER" keyProperty="id" resultType="int">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into company (id, c_name, c_address,
+        c_contacts, c_email, c_size,
+        c_capital, c_type, c_scope,
+        c_cuSource, c_referrer, c_operator,
+        c_operatorPhone, c_regtime, c_regcode,
+        bn_start, bn_end, c_taxationtype,
+        c_publicAccount, c_isReported, c_accountantName,
+        c_isjianz, c_createtime, c_modification,
+        c_status, c_update, c_notes
+        )
+        values (#{id,jdbcType=INTEGER}, #{cName,jdbcType=VARCHAR}, #{cAddress,jdbcType=VARCHAR},
+        #{cContacts,jdbcType=VARCHAR}, #{cEmail,jdbcType=VARCHAR}, #{cSize,jdbcType=VARCHAR},
+        #{cCapital,jdbcType=DOUBLE}, #{cType,jdbcType=VARCHAR}, #{cScope,jdbcType=VARCHAR},
+        #{cCusource,jdbcType=VARCHAR}, #{cReferrer,jdbcType=VARCHAR}, #{cOperator,jdbcType=VARCHAR},
+        #{cOperatorphone,jdbcType=VARCHAR}, #{cRegtime,jdbcType=TIMESTAMP}, #{cRegcode,jdbcType=VARCHAR},
+        #{bnStart,jdbcType=TIMESTAMP}, #{bnEnd,jdbcType=TIMESTAMP}, #{cTaxationtype,jdbcType=VARCHAR},
+        #{cPublicaccount,jdbcType=VARCHAR}, #{cIsreported,jdbcType=VARCHAR}, #{cAccountantname,jdbcType=VARCHAR},
+        #{cIsjianz,jdbcType=VARCHAR}, #{cCreatetime,jdbcType=TIMESTAMP}, #{cModification,jdbcType=TIMESTAMP},
+        #{cStatus,jdbcType=VARCHAR}, #{cUpdate,jdbcType=LONGVARCHAR}, #{cNotes,jdbcType=LONGVARCHAR}
+        )
+    </insert>
+
+    <update id="editCompanySelective" parameterType="com.yjhy.entity.Company" >
+        update company
+        <set >
+            <if test="cName != null" >
+                c_name = #{cName,jdbcType=VARCHAR},
+            </if>
+            <if test="cAddress != null" >
+                c_address = #{cAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="cContacts != null" >
+                c_contacts = #{cContacts,jdbcType=VARCHAR},
+            </if>
+            <if test="cEmail != null" >
+                c_email = #{cEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="cSize != null" >
+                c_size = #{cSize,jdbcType=VARCHAR},
+            </if>
+            <if test="cCapital != null" >
+                c_capital = #{cCapital,jdbcType=DOUBLE},
+            </if>
+            <if test="cType != null" >
+                c_type = #{cType,jdbcType=VARCHAR},
+            </if>
+            <if test="cScope != null" >
+                c_scope = #{cScope,jdbcType=VARCHAR},
+            </if>
+            <if test="cCusource != null" >
+                c_cuSource = #{cCusource,jdbcType=VARCHAR},
+            </if>
+            <if test="cReferrer != null" >
+                c_referrer = #{cReferrer,jdbcType=VARCHAR},
+            </if>
+            <if test="cOperator != null" >
+                c_operator = #{cOperator,jdbcType=VARCHAR},
+            </if>
+            <if test="cOperatorphone != null" >
+                c_operatorPhone = #{cOperatorphone,jdbcType=VARCHAR},
+            </if>
+            <if test="cRegtime != null" >
+                c_regtime = #{cRegtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cRegcode != null" >
+                c_regcode = #{cRegcode,jdbcType=VARCHAR},
+            </if>
+            <if test="bnStart != null" >
+                bn_start = #{bnStart,jdbcType=TIMESTAMP},
+            </if>
+            <if test="bnEnd != null" >
+                bn_end = #{bnEnd,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cTaxationtype != null" >
+                c_taxationtype = #{cTaxationtype,jdbcType=VARCHAR},
+            </if>
+            <if test="cPublicaccount != null" >
+                c_publicAccount = #{cPublicaccount,jdbcType=VARCHAR},
+            </if>
+            <if test="cIsreported != null" >
+                c_isReported = #{cIsreported,jdbcType=VARCHAR},
+            </if>
+            <if test="cAccountantname != null" >
+                c_accountantName = #{cAccountantname,jdbcType=VARCHAR},
+            </if>
+            <if test="cIsjianz != null" >
+                c_isjianz = #{cIsjianz,jdbcType=VARCHAR},
+            </if>
+            <if test="cCreatetime != null" >
+                c_createtime = #{cCreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cModification != null" >
+                c_modification = #{cModification,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cStatus != null" >
+                c_status = #{cStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="cUpdate != null" >
+                c_update = #{cUpdate,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="cNotes != null" >
+                c_notes = #{cNotes,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!-- 删除公司其他信息 -->
+    <delete id="delOtherData" parameterType="java.lang.Integer">
+        DELETE legal_person,pic,taxation,earnings
+        FROM company
+        INNER JOIN legal_person ON company.`id` = legal_person.`company_id`
+        LEFT JOIN pic ON company.`id` = pic.`c_companyid`
+        LEFT JOIN taxation ON company.`id` = taxation.`t_companyid`
+        LEFT JOIN earnings ON earnings.`companyId` = company.`id`
+        WHERE company.`id` = #{id}
+    </delete>
+
+    <delete id="delCompany" parameterType="java.lang.Integer">
+        DELETE company,legal_person,pic,taxation,earnings
+        FROM company
+        INNER JOIN legal_person ON company.`id` = legal_person.`company_id`
+        LEFT JOIN pic ON company.`id` = pic.`c_companyid`
+        LEFT JOIN taxation ON company.`id` = taxation.`t_companyid`
+        LEFT JOIN earnings ON earnings.`companyId` = company.`id`
+        WHERE company.`id` = #{id}
+    </delete>
+
+    <select id="selectByIds" parameterType="java.util.List" resultType="com.yjhy.entity.Company">
+        SELECT
+        <include refid="sql_list"></include>,
+        c_update,c_notes,
+        IFNULL((SELECT SUM(money) FROM earnings),0) totalMoney
+        FROM company
+        <where>
+            <if test="ids!=null">
+                and id in
+                <foreach item="item" index="index" collection="ids"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY company.`c_modification` DESC
+    </select>
+
+</mapper>

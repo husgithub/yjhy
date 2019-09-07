@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>云玖合壹财务后台管理系统</title>
+    <link rel="stylesheet" href="layui/css/layui.css"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/login.css"/>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
+
+        <div class="layadmin-user-login-main">
+            <div class="layadmin-user-login-box layadmin-user-login-header">
+                <h2>云玖合壹财务后台管理系统</h2>
+                <p></p>
+            </div>
+            <div class="layadmin-user-login-box layadmin-user-login-body layui-form" id="loginForm">
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
+                    <input type="text" name="accountName" id="LAY-user-login-username" lay-verify="required" placeholder="用户名" class="layui-input" onkeydown="enter(event)"/>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+                    <input type="password" name="accountPwd" id="LAY-user-login-password" lay-verify="required" placeholder="密码" class="layui-input" onkeydown="enter(event)"/>
+                </div>
+                <!--<div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-xs7">
+                            <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
+                            <input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="图形验证码" class="layui-input"/>
+                        </div>
+                        <div class="layui-col-xs5">
+                            <div style="margin-left: 10px;">
+                                <img src="https://www.oschina.net/action/user/captcha" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-bottom: 20px;">
+                    <input type="checkbox" name="remember" lay-skin="primary" title="记住密码"/><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><span>记住密码</span><i class="layui-icon layui-icon-ok"></i></div>
+                </div>-->
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="LAY-user-login-submit" onclick="login();">登 入</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-trans layadmin-user-login-footer">
+            <p>© 2018 <a href="http://www.layui.com/" target="_blank">云玖合壹</a></p>
+        </div>
+    </div>
+</div>
+<script src="/js/common/jquery-1.10.1.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="/js/common/common.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('layer', function () {
+
+        window.enter = function (event) {
+            var keyCode = event.keyCode || event.which
+            if (keyCode == 13) {
+                login();
+            }
+        }
+
+        window.login = function () {
+            var accountName = $("#loginForm input[name='accountName']").val();
+            var accountPwd = $("#loginForm input[name='accountPwd']").val();
+            if (!accountName) {
+                layer.msg('用户名不能为空！', {icon: 5});
+                return;
+            }
+            if (!accountPwd) {
+                layer.msg('密码不能为空！', {icon: 5});
+                return;
+            }
+            var data = {accountName: accountName, accountPwd: accountPwd};
+            $.post("/loginVerify", data, function (result) {
+                    if (result.code != 0) {
+                        layer.msg(result.error, {icon: 5});
+                        return;
+                    }
+                    window.location.href = "/";
+                },
+                "json");
+            return false;
+        }
+    });
+</script>
+</body>
+</html>

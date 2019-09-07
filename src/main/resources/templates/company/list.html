@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>layout</title>
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+</head>
+<body class="layui-mybody">
+
+<div class="comp-criteria">
+    <div class="layui-inline">
+        <label class="layui-form-label mylabel">公司名称：</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" name="cName" id="cName" placeholder="请输入公司名称"/>
+        </div>
+    </div>
+    <!--<div class="layui-inline">
+        <label class="layui-form-label mylabel">公司地址：</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" name="cAddress" id="cAddress" placeholder="请输入公司地址"/>
+        </div>
+    </div>-->
+    <div class="layui-inline">
+        <label class="layui-form-label mylabel">联系人：</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" name="cContacts" id="cContacts" placeholder="请输入联系人"/>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label mylabel">注册号：</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" name="cRegcode" id="cRegcode" placeholder="请输入注册号"/>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label mylabel">注册日期</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" id="cRegtimeStart" placeholder="yyyy-MM-dd HH:mm:ss" />
+        </div>
+        -
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" id="cRegtimeEnd" placeholder="yyyy-MM-dd HH:mm:ss" />
+        </div>
+    </div>
+    <!--<br/>
+    -->
+    <button class="layui-btn" data-type="reload" id="search">搜索</button>
+</div>
+<table class="layui-hide" id="company" lay-filter="company"></table>
+
+<script type="text/html" id="toolbarComp">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="addCompany">新增</button>
+        <button class="layui-btn layui-btn-sm" lay-event="export">导出</button>
+        <button class="layui-btn layui-btn-sm" lay-event="exportAll">导出全部</button>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script src="/js/common/jquery-1.10.1.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="/js/common/common.js"></script>
+<script src="/js/common/dateformat.js"></script>
+<script src="/js/company/list.js"></script>
+</body>
+</html>
